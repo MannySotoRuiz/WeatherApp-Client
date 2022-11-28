@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Account Settings</title>
+        <link type="text/css" href="accountsettings.css" rel="stylesheet" />
+    </head>
+    <body>
+        <h1>Account Settings</h1>
+        <div id="settingsDiv">
+            <div id="leftPanel">
+                <div class="buttonText"><p>Edit Profile</p></div>
+                <div class="buttonText"><p style="margin-top: 20px;">Password</p></div>
+                <div class="buttonText"><p style="margin-top: 20px;">Notifications</p></div>
+                <div class="buttonText"><p style="margin-top: 20px;">Weather & Clothes Preference</p></div>
+                <div id="verticalLine"></div>
+            </div>
+            <div id="rightPanel">
+                <div id="editProfileDisplay">
+                    <h2>Edit Profile</h2>
+                    <div id="profileInfo">
+                        <div id="firstName">First Name<br><br>
+                            <input type="text" id="ffirstname" name="fname" placeholder="Manny"><br><br>
+                        </div>
+                        <div id="LastName">Last Name<br><br>
+                            <input type="text" id="flastname" name="fname" placeholder="Soto Ruiz"><br><br>
+                        </div>
+                        <div id="city">City<br><br>
+                            <input type="text" id="fcity" name="fname" placeholder="New York"><br><br>
+                        </div>
+                        <div id="state">State<br><br>
+                            <input type="text" id="fstate" name="fname" placeholder="New York"><br><br>
+                        </div>
+                        <div id="country">Country<br><br>
+                            <input type="text" id="fcountry" name="fname" placeholder="United States"><br><br>
+                        </div>
+                        <button type="submit" value="Submit">Save</button>
+                    </div>
+                </div>
+                <div class="hidden" id="passwordDisplay">
+                    <h2>Password</h2>
+                    <div id="passwordInfo">
+                        <div id="currentPassword">Current Password<br><br>
+                            <input type="text" id="fcurrentpassword" name="fcurrentpassword"><br><br>
+                        </div>
+                        <div id="newPassword">New Password<br><br>
+                            <input type="text" id="fnewpassword" name="fnewpassword"><br><br>
+                        </div>
+                    </div>
+                    <button type="submit" value="Submit">Save</button>
+                </div>
+                <div class="hidden" id="notificationDisplay"></div>
+                <div class="hidden" id="preferenceDisplay">
+                    <h2>Weather & Clothes Preference</h2>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
