@@ -1,3 +1,4 @@
+// import weather icon images
 import sun from "../../images/sun.png";
 import sunCloudy from "../../images/cloudyWithSun.png";
 import cloudyNoSun from "../../images/cloudyNoSun.jpg";
@@ -7,6 +8,17 @@ import thunderstorm from "../../images/thunderstorm.png";
 import snow from "../../images/snow.png";
 import mist from "../../images/mist.png";
 import night from "../../images/night2.png";
+
+// import background images
+import sun2 from "../../images/Backgrounds/sun.jpg";
+import sunCloudy2 from "../../images/Backgrounds/cloudyWithSun.jpg";
+import cloudyNoSun2 from "../../images/Backgrounds/cloudyNoSun.jpg";
+import sunRain2 from "../../images/Backgrounds/sunRain.jpg";
+import cloudyRain2 from "../../images/Backgrounds/cloudyRain.webp";
+import thunderstorm2 from "../../images/Backgrounds/thunderstorm.jpg";
+import snow2 from "../../images/Backgrounds/snow.jpg";
+import mist2 from "../../images/Backgrounds/mist.jpg";
+import night2 from "../../images/Backgrounds/night.webp";
 
 export default async function getHourly_Weekly_CurrentWeather(location) {
     if (!location) {
@@ -49,40 +61,64 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
         "icon50n": mist
     };
 
-    const errorCurrentData = ["NULL", "NULL", "NULL", "NULL", "NULL"];
+    const backGroundMap = {
+        "icon01d": sun2,
+        "icon02d": sunCloudy2,
+        "icon03d": cloudyNoSun2,
+        "icon04d": cloudyNoSun2,
+        "icon09d": cloudyRain2,
+        "icon10d": sunRain2,
+        "icon11d": thunderstorm2,
+        "icon13d": snow2,
+        "icon50d": mist2,
+        "icon01n": night2,
+        "icon02n": night2,
+        "icon03n": cloudyNoSun2,
+        "icon04n": night2,
+        "icon09n": cloudyRain2,
+        "icon10n": cloudyRain2,
+        "icon11n": thunderstorm2,
+        "icon50n": mist2
+    };
+
+    const errorCurrentData = [0, 0, 0, sun, "NULL", 0, sun2];
     const error7DayData = [
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"]
+        ["NULL", 0, sun, 0, 0, "NULL"],
+        ["NULL", 0, sun, 0, 0, "NULL"],
+        ["NULL", 0, sun, 0, 0, "NULL"],
+        ["NULL", 0, sun, 0, 0, "NULL"],
+        ["NULL", 0, sun, 0, 0, "NULL"],
+        ["NULL", 0, sun, 0, 0, "NULL"],
+        ["NULL", 0, sun, 0, 0, "NULL"]
     ];
     const errorHrData = [
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
-        ["NULL", "NULL", "NULL", "NULL", "NULL"],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
+        ["NULL", 0, sun, "NULL", 0],
     ];
+
+    let highestTemp7days = [];
 
     // the location provided to us is not in the saved location, so we need to go get that lat and lon for that location
     if (!ifSavedLocation) {
@@ -99,10 +135,14 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
         getAllCoordinates = newCoor;
         let endpoint = `https://api.openweathermap.org/data/2.5/onecall?lat=${getAllCoordinates[0]}&lon=${getAllCoordinates[1]}&exclude=minutely,alerts&units=imperial&appid=e15a543800b7e60db9e4e04aaf22a037`;
         const res = await fetch(endpoint);
-        if (res.status !== 200) {
-            alert("Unexpected error happened when cit's weather. Please try again");
+        if (response.status === 429) {
+            document.getElementById("homeErrorMsg").innerText = "Error: Weather API reached limit calls";
             return [errorHrData, error7DayData, errorCurrentData];
+        } else if (response.status !== 200) {
+            document.getElementById("homeErrorMsg").innerText = "Error with Weather API";
+            return [errorHrData, error7DayData, errorCurrentData]; 
         }
+
         const data = await res.json();
 
         // this is the code to get the current weather information
@@ -129,7 +169,7 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
         // const currentIconURL = `https://openweathermap.org/img/wn/${currentIcon}@2x.png`;
         const currentDesc = data.current.weather[0].description;
         const currentFeels = data.current.feels_like.toFixed(0);
-        currentWeatherData = [currentTemp, newSunsetTime, currentHumidity, picMap[formatIcon], currentDesc, currentFeels];
+        currentWeatherData = [currentTemp, newSunsetTime, currentHumidity, picMap[formatIcon], currentDesc, currentFeels, backGroundMap[formatIcon]];
 
         // this code is to get the hourly data
         data.hourly.forEach((value, idx) => {
@@ -188,10 +228,14 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
         let getNeededCoordinates = getAllCoordinates[index];
         let endpoint = `https://api.openweathermap.org/data/2.5/onecall?lat=${getNeededCoordinates[0]}&lon=${getNeededCoordinates[1]}&exclude=minutely,alerts&units=imperial&appid=e15a543800b7e60db9e4e04aaf22a037`;
         const response = await fetch(endpoint);
-
-        if (response.status !== 200) {
-            alert("Unexpected error happened. Please try again");
+        if (response.status === 429) {
+            const untilAPIworks = [47, 35, 50, 60, 40, 39, 30];
+            localStorage.setItem("highestTemp7Days", JSON.stringify(untilAPIworks));
+            document.getElementById("homeErrorMsg").innerText = "Error: Weather API reached limit calls";
             return [errorHrData, error7DayData, errorCurrentData];
+        } else if (response.status !== 200) {
+            document.getElementById("homeErrorMsg").innerText = "Error with Weather API";
+            return [errorHrData, error7DayData, errorCurrentData]; 
         }
 
         const data = await response.json();
@@ -201,6 +245,9 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
         const currentSunset = new Date(data.current.sunset * 1000);
         const sunsetHour = currentSunset.getHours();
         const sunsetMins = currentSunset.getMinutes();
+        
+
+
         let newSunsetTime;
         if (sunsetHour === 0) {
             newSunsetTime = `12:${sunsetMins} am`;
@@ -220,7 +267,7 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
         // const currentIconURL = `https://openweathermap.org/img/wn/${currentIcon}@2x.png`;
         const currentDesc = data.current.weather[0].description;
         const currentFeels = data.current.feels_like.toFixed(0);
-        currentWeatherData = [currentTemp, newSunsetTime, currentHumidity, picMap[formatIcon], currentDesc, currentFeels];
+        currentWeatherData = [currentTemp, newSunsetTime, currentHumidity, picMap[formatIcon], currentDesc, currentFeels, backGroundMap[formatIcon]];
 
         // this code is to get the hourly data
         data.hourly.forEach((value, idx) => {
@@ -267,10 +314,11 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
                 let dailyDesc = value.weather[0].description;
                 let currentDayData = [dayname, rainProb, picMap[formatIcon], minTemp, maxTemp, dailyDesc];
                 sevenDayData.push(currentDayData);
+                highestTemp7days.push(maxTemp);
             }
         });
     }
-
+    localStorage.setItem("highestTemp7Days", JSON.stringify(highestTemp7days));
     return [hourlyData, sevenDayData, currentWeatherData];
 }
 
