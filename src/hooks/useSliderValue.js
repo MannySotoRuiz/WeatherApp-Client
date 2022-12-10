@@ -9,16 +9,16 @@ export const useSliderValue = () => {
     setError(null)
     console.log(email, value);
 
-    // const response = await fetch('https://weather-app-server-api.herokuapp.com/api/accounts/updatevalue', {
-    //   method: 'POST',
-    //   headers: {'Content-Type': 'application/json'},
-    //   body: JSON.stringify({ email, password })
-    // })
-    const response = await fetch('/api/accounts/updatevalue', {
+    const response = await fetch('https://weather-app-server-api.herokuapp.com/api/accounts/updatevalue', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ email, value })
+      body: JSON.stringify({ email, password })
     })
+    // const response = await fetch('/api/accounts/updatevalue', {
+    //   method: 'POST',
+    //   headers: {'Content-Type': 'application/json'},
+    //   body: JSON.stringify({ email, value })
+    // })
     const json = await response.json()
 
     if (!response.ok) {
