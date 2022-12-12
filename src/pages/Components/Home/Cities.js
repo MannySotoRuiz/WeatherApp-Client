@@ -1,22 +1,13 @@
 import NewCity from './NewCity';
-import React from 'react';
-// import getCityWeatherData from '../Helpers.js';
-// import usePlacesAutocomplete, {
-//     getGeocode,
-//     getLatLang,
-// } from 'use-places-autocomplete';
+import React, { useEffect } from 'react';
 
 const Cities = () => {
 
     const clickedCity = e => {
         let getLocation = e.currentTarget.parentNode.innerText;
-        let splitLocation = getLocation.split(",");
-        let getCity = splitLocation[0];
-        let getCountry = splitLocation[1].trim(); // to remover the leading white space
-        let newLocation = `${getCity}, ${getCountry}`;
         let changeLocation = document.getElementById("currentLocation");
-        changeLocation.innerText = newLocation;
-        localStorage.setItem("location", JSON.stringify(newLocation));
+        changeLocation.innerText = getLocation;
+        localStorage.setItem("location", JSON.stringify(getLocation));
         window.location.reload();
     };
 
@@ -54,10 +45,33 @@ const Cities = () => {
         defaultSavedLocations = getSavedLocations;
     } else {
         defaultSavedLocations = ["New York, USA", "Paris, France", "Berlin, Germany"];
+        let defaultLatLon = [["40.7128", "-74.0060"], ["48.8566", "2.3522"], ["52.5200", "13.4050"]];
         localStorage.setItem("savedLocations", JSON.stringify(defaultSavedLocations));
-        console.log(defaultSavedLocations);
+        localStorage.setItem("allCoordinates", JSON.stringify(defaultLatLon));
         getCoordinates(defaultSavedLocations);
     }
+
+    useEffect(() => {
+
+        // add border to city pic if selected
+        const allPics = document.querySelectorAll(".selectCity");
+        let currentLocation = JSON.parse(localStorage.getItem("location"));
+
+        if (!currentLocation) {
+            currentLocation = "New York, USA";
+            allPics[0].children[0].children[0].classList.add("cityPicActive");
+            return;
+        }
+
+        for (let i = 0; i < allPics.length; i++) {
+            let currentCity = allPics[i].children[1].innerHTML;
+            if (currentCity===currentLocation) {
+                allPics[i].children[0].children[0].classList.add("cityPicActive");
+            } else {
+                allPics[i].children[0].children[0].classList.remove("cityPicActive");
+            }
+        }
+    });
 
     // code to display all saved cities
     return (

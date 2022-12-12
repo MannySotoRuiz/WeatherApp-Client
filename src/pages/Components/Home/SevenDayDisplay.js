@@ -1,7 +1,3 @@
-// import sunImg from '../../../images/sun.png';
-// import cloudyNoSunImg from '../../../images/cloudyNoSun.png';
-// import cloudyRainImg from '../../../images/cloudyRain.png';
-// import cloudyWithSunImg from '../../../images/cloudyWithSun.png';
 import rainDropImg from '../../../images/rainDropIcon.png';
 import getHourly_Weekly_CurrentWeather from '../Helpers.js';
 import Popup from './Popup';
@@ -42,7 +38,7 @@ const SevenDayDisplay = () => {
                 // document.getElementById("displayErrorMsg").classList.remove("hidden");
                 setOpen(true)
             }
-            setData(getit[1]); 
+            setData(getit[1]);
         }
         getData(getLoc);
     }, [getLoc]);

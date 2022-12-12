@@ -107,6 +107,10 @@ width: 200px;
 text-align: center;
 }
 
+.cityPicActive{
+  outline: 9px solid #adc5fa;
+}
+
 .cityPic {
 margin: auto;
 height: 85%;
@@ -141,6 +145,11 @@ margin-bottom: 5%;
 cursor: pointer;
 }
 
+#addCity:hover {
+  color: #2e71de;
+  cursor: pointer;
+  }
+
 #addCity p {
 font-weight: lighter;
 }
@@ -157,14 +166,16 @@ display: flex;
 margin: 0;
 margin-left: 40px;
 /* text-align: center; */
-width: 20%;
-color: #808080;
+padding: 6px;
+color: white;
+background-color: #4B56D2;
 font-size: 20px;
 font-weight: 600;
+border-radius: 8%;
 }
 
 #howDisplayWeather h3:hover {
-color: #000047;
+color: #28cbcb;
 cursor: pointer;
 }
 
@@ -289,6 +300,10 @@ height: 100%;
 
 .hidden {
 display: none;
+}
+
+.myBorder {
+  outline: 4px solid #adc5fa;
 }
 
 .lowTempContainer {

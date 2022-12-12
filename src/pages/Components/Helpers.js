@@ -19,6 +19,8 @@ import thunderstorm2 from "../../images/Backgrounds/thunderstorm.jpg";
 import snow2 from "../../images/Backgrounds/snow.jpg";
 import mist2 from "../../images/Backgrounds/mist.jpg";
 import night2 from "../../images/Backgrounds/night.webp";
+import nightSnow from "../../images/nightsnow.jpg";
+import nightMist from "../../images/nightmist.jpg";
 
 export default async function getHourly_Weekly_CurrentWeather(location) {
     if (!location) {
@@ -58,7 +60,8 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
         "icon09n": cloudyRain,
         "icon10n": cloudyRain,
         "icon11n": thunderstorm,
-        "icon50n": mist
+        "icon50n": mist,
+        "icon13n": snow
     };
 
     const backGroundMap = {
@@ -78,7 +81,8 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
         "icon09n": cloudyRain2,
         "icon10n": cloudyRain2,
         "icon11n": thunderstorm2,
-        "icon50n": mist2
+        "icon50n": nightMist,
+        "icon13n": nightSnow
     };
 
     const errorCurrentData = [0, 0, 0, sun, "NULL", 0, sun2];
@@ -119,7 +123,8 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
     ];
 
     let highestTemp7days = [];
-    console.log(location);
+    document.getElementById("displayErrorMsg").classList.add("hidden");
+    // console.log(location);
     // the location provided to us is not in the saved location, so we need to go get that lat and lon for that location
     if (!ifSavedLocation) {
         // alert("Not in saved locations");
@@ -129,13 +134,17 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
         if (response.status !== 200) {
             document.getElementById("homeErrorMsg").innerText = `Error: Geocoding API crashed`;
             console.log("geocoding api crashed");
+            localStorage.setItem("location", JSON.stringify("New York, USA"));
+            document.getElementById("displayErrorMsg").classList.remove("hidden");
             return [errorHrData, error7DayData, errorCurrentData];
         }
         const responseData = await response.json();
-        console.log(responseData);
+        // console.log(responseData);
         if (responseData.length === 0) {
             document.getElementById("homeErrorMsg").innerText = `Error: API couldn't find latitude and longitude for ${getCity}`;
             console.log("couldnt find lat and lon by the api");
+            localStorage.setItem("location", JSON.stringify("New York, USA"));
+            document.getElementById("displayErrorMsg").classList.remove("hidden");
             return [errorHrData, error7DayData, errorCurrentData];
         }
         const newCoor = [responseData[0].lat, responseData[0].lon];
@@ -237,15 +246,17 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
             getAllCoordinates = defaultLatLong;
         }
         let getNeededCoordinates = getAllCoordinates[index];
-        let endpoint = `https://api.openweathermap.org/data/2.5/onecall?lat=${getNeededCoordinates[0]}&lon=${getNeededCoordinates[1]}&exclude=minutely,alerts&units=imperial&appid=e15a543800b7e60db9e4e04aaf22a037`;
+        let endpoint = `https://api.openweathermap.org/data/2.5/onecall?lat=${getNeededCoordinates[0]}&lon=${getNeededCoordinates[1]}&exclude=minutely,alerts&units=imperial&appid=a63f9e77a7e5b1e6d12da2311068e37d`;
         const response = await fetch(endpoint);
         if (response.status === 429) {
             const untilAPIworks = [47, 35, 50, 60, 40, 39, 30];
             localStorage.setItem("highestTemp7Days", JSON.stringify(untilAPIworks));
             document.getElementById("homeErrorMsg").innerText = "Error: Weather API reached limit calls";
+            document.getElementById("displayErrorMsg").classList.remove("hidden");
             return [errorHrData, error7DayData, errorCurrentData];
         } else if (response.status !== 200) {
             document.getElementById("homeErrorMsg").innerText = "Error with Weather API";
+            document.getElementById("displayErrorMsg").classList.remove("hidden");
             return [errorHrData, error7DayData, errorCurrentData]; 
         }
 
@@ -329,83 +340,3 @@ export default async function getHourly_Weekly_CurrentWeather(location) {
     localStorage.setItem("highestTemp7Days", JSON.stringify(highestTemp7days));
     return [hourlyData, sevenDayData, currentWeatherData];
 }
-
-
-/**This is the code for the old weather api */
-
-// export default async function display7DayData(location) {
-//     if (!location) {
-//         alert("Unexpected error. Try again");
-//     }
-
-//     let ifSavedLocation = true;
-//     let index = 0;
-//     const getSavedLocations = JSON.parse(localStorage.getItem("savedLocations")); 
-//     for (index = 0; index < getSavedLocations.length; index++) {
-//         if (location === getSavedLocations[index]) {
-//             break;
-//         }
-//     }
-
-//     if (!ifSavedLocation) {
-//         alert("Not in saved locations");
-//         return;
-//     }
-
-//     let getAllCoordinates = JSON.parse(localStorage.getItem("allCoordinates"));
-//     if (!getAllCoordinates) {
-//         getAllCoordinates = [[40.7127281,-74.0060152],[48.8588897,2.3200410217200766],[52.5170365,13.3888599]];
-//     }
-
-//     let getNeededCoordinates = getAllCoordinates[index];
-//     let endpoint = `https://api.weather.gov/points/${getNeededCoordinates[0]},${getNeededCoordinates[1]}`;
-//     const response = await fetch(endpoint);
-
-//     if (response.status !== 200) {
-//         alert("Unexpected error happened. Please try again");
-//         return;
-//     }
-
-//     const data = await response.json();
-//     let forecastData = await data.properties.forecast;
-//     let response2 = await fetch(forecastData);
-
-//     if (response2.status !== 200) {
-//         alert("Unexpected error happened. Please try again");
-//         return;
-//     }
-
-//     const data2 = await response2.json();
-//     let dailyData = await data2.properties.periods;
-//     let dataForAllDays = [];
-//     dailyData.forEach((value, idx) => {
-//         if (value.name.includes("Night") === false && dataForAllDays.length !== 7) {
-//             let day = value.name;
-//             let temp = value.temperature;
-//             let icon = value.icon;
-//             let currentDayData = [day, temp, icon];
-//             dataForAllDays.push(currentDayData);
-//         }
-//     });
-
-//     return dataForAllDays;
-//     // let dataForAllDays = [];
-
-//     // data.daily.forEach((value, idx) => {
-//     //     if (idx >= 0 && idx !== 7 && dataForAllDays.length !== 7) {
-//     //         let dayname = new Date(value.dt * 1000).toLocaleDateString("en", {
-//     //             weekday: "long",
-//     //         });
-//     //         let icon = value.weather[0].icon;
-//     //         let iconURL = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-//     //         let getProb = value.pop;
-//     //         let rainProb = getProb * 100;
-//     //         let minTemp = value.temp.min.toFixed(0);
-//     //         let maxTemp = value.temp.max.toFixed(0);
-//     //         let currentDayData = [dayname, rainProb, iconURL, minTemp, maxTemp];
-//     //         dataForAllDays.push(currentDayData);
-//     //     }
-//     // });
-
-//     // return dataForAllDays;
-// }

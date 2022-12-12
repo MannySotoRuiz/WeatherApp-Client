@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 import getHourly_Weekly_CurrentWeather from '../Helpers.js';
 import ChanceOfRain from './ChanceOfRain.js';
 import { useAuthContext } from '../../../hooks/useAuthContext.js';
+import notibell from '../../../images/notibell.png';
+
+// date fns
+import { format } from 'date-fns';
 
 
 const HomeRight = () => {
@@ -29,6 +33,7 @@ const HomeRight = () => {
     }
 
     const [allData, setData] = useState([]);
+    const [notis, setNotis] = useState([]);
 
     useEffect(() => {
 
@@ -39,16 +44,59 @@ const HomeRight = () => {
             let getQuery =  document.getElementById("rightContainer");
             getQuery.style.backgroundImage = `url(${backgroundImg})`;
         }
+        const fetchNotifications = async () => {
+            const getUser = JSON.parse(localStorage.getItem("user"));
+            if (getUser) {
+                const userEmail = getUser.email;
+                const params = {param1: userEmail};
+
+                const response = await fetch(`https://weather-app-server-api.herokuapp.com/api/notifications?${new URLSearchParams(params)}`);
+                const json = await response.json();
+
+                if (response.ok) {
+                    setNotis(json);
+                }
+            }
+        }
+        fetchNotifications();
         getData(location);
     }, [location]);
+
+    const clickedNotificationBell = () => {
+        const getBellPopup = document.querySelectorAll(".displayAllNotis");
+        const tempList = getBellPopup[0].classList;
+        if (tempList[1] === "hidden") {
+            getBellPopup[0].classList.remove("hidden");
+        } else {
+            getBellPopup[0].classList.add("hidden");
+        }
+    }
 
     return (
         <div className="col" id="rightContainer">
             <div id="loginContainer">
                 {user && (
-                    <span>{user.email}</span>
+                    <div>
+                        <span id="displayEmail">Hello {user.email}</span>
+                        <div className="holdAccountPic" onClick={clickedNotificationBell}><img src={notibell} alt="notification bell img"/></div>
+                        <div className="displayAllNotis hidden">
+                            {notis.map((currentNoti, idx) => {
+                                return (
+                                    <div className="homeEachNoti" key={idx}>
+                                        <p className="homeNotiTitle">{format(new Date(currentNoti.createdAt), 'MM/dd/yyyy, eeee')}, {currentNoti.location}</p>
+                                        <div className="homeNotiTemps">
+                                            <p>Highest: {currentNoti.hightemp}<span>&#176;</span>F</p>
+                                            <p>Lowest: {currentNoti.lowtemp}<span>&#176;</span>F</p>
+                                        </div>
+                                        <p style={{ fontSize: "medium" }}>Description: {currentNoti.description}</p>
+                                        <p style={{ fontSize: "medium" }}>Recommended fit: {currentNoti.recommendedfit}</p>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
                 )}
-                <div id="holdAccountPic">
+                <div  style={{ width: "15%" }} className="holdAccountPic">
                     <img src={require('../../../images/account.png')} alt="account icon" onClick={() => {
                         navigate("/login");
                     }}/>
