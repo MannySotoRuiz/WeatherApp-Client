@@ -12,22 +12,11 @@ import thickJacket from "../../../images/thickjacket.jpeg";
 import thinJacket from "../../../images/thinjacket.png";
 import woolSweater from "../../../images/woolsweater.jpeg";
 
-// function Popup(props) {
-//   return (props.trigger) ? (
-//     <div className="popup">
-//         <div className="popup-inner">
-//             <button className="close-bttn" onClick={() => props.setTrigger(false)}>close</button>
-//             { props.children }
-//         </div>
-//     </div>
-//   ) : "";
-// };
 const Popup = ({ open, onClose }) => {
 
   const [message, setMessage] = useState("");
   const [fitImg, setFit] = useState("");
   const { user } = useAuthContext();
-  // const [fitI, setFit] useState
   let outputIcon;
   useEffect(() => {
     if (open) {
@@ -143,10 +132,12 @@ const Popup = ({ open, onClose }) => {
         }
       }
 
-      // const trimFit = outputFit.replace(/\s/g, '');
-      // console.log(trimFit);
-      // outputIcon = fitIcons[trimFit];
-      // setFit(outputIcon);
+      if (user) {
+        const trimFit = outputFit.replace(/\s/g, '');
+        console.log(trimFit);
+        outputIcon = fitIcons[trimFit];
+        setFit(outputIcon);
+      }
     }
   }, [open]);
   //});
@@ -170,7 +161,7 @@ const Popup = ({ open, onClose }) => {
               <i className="iconfont icon-yurongfu3 f100"></i>
               <i className="iconfont icon-TROUSERS f100"></i>
               <span className="mt-10">{message}</span>
-              {/* <img style={{ width: "20%", margin: "auto", "margin-top": "30px" }} src={fitImg} alt="fit icon"/> */}
+              <img style={{ width: "40%", margin: "auto", "margin-top": "30px" }} src={fitImg} alt="fit icon"/>
             </div>
           </div>
           <div className="backgroundPopup"></div>
