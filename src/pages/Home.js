@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import HomeLeft from './Components/Home/HomeLeft';
 import HomeRight from './Components/Home/HomeRight';
 import closeImg from '../images/close.png';
@@ -16,14 +17,28 @@ import night from "../images/night2.png";
 
 // date fns
 import { format } from 'date-fns';
+import getRecommendation from './Components/Recommdation.js';
+
+import hamburger from "../images/hamburger.png";
+import { useAuthContext } from '../hooks/useAuthContext';
+import { useLogout } from '../hooks/useLogout';
 
 const Home = () => {
+
+    let navigate = useNavigate();
+    const { user } = useAuthContext();
+    const { logout } = useLogout();
 
     document.body.style.marginTop = "0%";
     document.body.style.marginRight = "0%";
     document.body.style.marginLeft = "0%";
     document.body.style.marginBottom = "0%";
     document.body.style.backgroundColor = "#ecf2f4";
+
+    const handleLogout = () => {
+        logout();
+        window.location.reload();
+   }
 
     const handleClose = () => {
         document.getElementById("displayErrorMsg").classList.add("hidden");
@@ -56,7 +71,7 @@ const Home = () => {
                         }
                         console.log(tempDate, getUser.date);
                     }
-
+                    // ifFound = false;
                     if (ifFound) { // notification already exists for current day
                         console.log("notification already exists for this date, dont create a new one");
                     } else { // create a new notification for the date
@@ -112,9 +127,10 @@ const Home = () => {
                         const tempIcon = tempWeather.weather[0].icon;
                         const formatIcon = `icon${tempIcon}`;
                         const icon = picMap[formatIcon];
-                        const fit = "Hoodie";
+                        // const fit = "Hoodie";
                         const highTemp = tempWeather.temp.max.toFixed(0);
                         const lowTemp = tempWeather.temp.min.toFixed(0);
+                        const fit = getRecommendation(highTemp);
                         const desc = tempWeather.weather[0].description;
                         const newNotification = {userEmail, fit, highTemp, lowTemp, desc, icon, location};
                         // const response2 = await fetch('/api/notifications', {
@@ -144,6 +160,14 @@ const Home = () => {
         createNotification();
     });
 
+    const handleBurgerClick = () => {
+        document.querySelectorAll(".displayMenu")[0].classList.remove("hidden");
+    }
+
+    const handleCloseMenu = () => {
+        document.querySelectorAll(".displayMenu")[0].classList.add("hidden");
+    }
+
     return (
         <div id="home">
             <div className="hidden" id="displayErrorMsg">
@@ -153,6 +177,22 @@ const Home = () => {
                 <div id="homeErrorMsg"></div>
             </div>
             <div className="row" id="mainContainer">
+                
+
+                <div className="mobileMenu" onClick={handleBurgerClick}>
+                    <img src={hamburger} alt="hamburger menu icon"/>
+                </div>
+                <div className="displayMenu hidden">
+                    <img src={closeImg} alt="close menu" onClick={handleCloseMenu}/>
+                    <h4 onClick={() => {navigate("/login");}}>Account</h4>
+                    <h4><a href="#addCity" onClick={handleCloseMenu}>Weather Forecast</a></h4>
+                    <h4 onClick={() => {navigate("/login");}}>Notifications</h4>
+                    {user && (
+                        <h4 onClick={handleLogout} >Log out</h4>
+                    )}
+                </div>
+
+
                 <HomeLeft />
                 <HomeRight />
             </div >

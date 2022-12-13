@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 // import { useAuthContext } from "../../../hooks/useAuthContext";
 // import { useNotificationContext } from "../../../hooks/useNotificationContext";
 import trashIocn from '../../../images/trash.png';
+import getRecommendation from "../Recommdation.js";
 
 // date fns
 import { format } from 'date-fns';
@@ -88,11 +89,12 @@ const Notifications = () => {
             }
         }
         fetchNotifications();
+        getRecommendation();
     }, [])
 
     const deleteNoti = async (event, id) => {
 
-        const response = await fetch('https://weather-app-server-api.herokuapp.com/api/notifications/' + id, {
+        const response = await fetch('/api/notifications/' + id, {
             method: 'DELETE'
         })
         const json = await response.json();
