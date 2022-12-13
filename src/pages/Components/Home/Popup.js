@@ -143,10 +143,10 @@ const Popup = ({ open, onClose }) => {
         }
       }
 
-      const trimFit = outputFit.replace(/\s/g, '');
-      console.log(trimFit);
-      outputIcon = fitIcons[trimFit];
-      setFit(outputIcon);
+      // const trimFit = outputFit.replace(/\s/g, '');
+      // console.log(trimFit);
+      // outputIcon = fitIcons[trimFit];
+      // setFit(outputIcon);
     }
   }, [open]);
   //});
@@ -170,7 +170,7 @@ const Popup = ({ open, onClose }) => {
               <i className="iconfont icon-yurongfu3 f100"></i>
               <i className="iconfont icon-TROUSERS f100"></i>
               <span className="mt-10">{message}</span>
-              <img style={{ width: "20%", margin: "auto", "margin-top": "30px" }} src={fitImg} alt="fit icon"/>
+              {/* <img style={{ width: "20%", margin: "auto", "margin-top": "30px" }} src={fitImg} alt="fit icon"/> */}
             </div>
           </div>
           <div className="backgroundPopup"></div>
